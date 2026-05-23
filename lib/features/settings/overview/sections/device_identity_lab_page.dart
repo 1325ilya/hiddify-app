@@ -98,10 +98,10 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
                   icon: Icons.layers_outlined,
                   colors: [const Color(0xFF1E3C72), const Color(0xFF2A5298)],
                   items: {
-                    "Bundle Identifier": real["bundleId"] ?? "Loading...",
-                    "App Version": real["appVersion"] ?? "Loading...",
-                    "Build Number": real["appBuild"] ?? "Loading...",
-                    "Team Signature": real["teamId"] ?? "Legal/Standard",
+                    "Bundle Identifier": real["bundleId"]?.toString() ?? "Loading...",
+                    "App Version": real["appVersion"]?.toString() ?? "Loading...",
+                    "Build Number": real["appBuild"]?.toString() ?? "Loading...",
+                    "Team Signature": real["teamId"]?.toString() ?? "Legal/Standard",
                   },
                 ),
                 const Gap(16),
@@ -113,10 +113,10 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
                   icon: Icons.developer_board_rounded,
                   colors: [const Color(0xFF9C27B0), const Color(0xFFE040FB)],
                   items: {
-                    "Hardware Model": real["model"] ?? "Loading...",
-                    "OS Platform": real["systemName"] ?? "Loading...",
-                    "OS Version": real["systemVersion"] ?? "Loading...",
-                    "User Assigned Name": real["deviceName"] ?? "Standard iPhone",
+                    "Hardware Model": real["model"]?.toString() ?? "Loading...",
+                    "OS Platform": real["systemName"]?.toString() ?? "Loading...",
+                    "OS Version": real["systemVersion"]?.toString() ?? "Loading...",
+                    "User Assigned Name": real["deviceName"]?.toString() ?? "Standard iPhone",
                   },
                 ),
                 const Gap(16),
@@ -128,9 +128,9 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
                   icon: Icons.fingerprint_rounded,
                   colors: [const Color(0xFF00B4DB), const Color(0xFF0083B0)],
                   items: {
-                    "Identifier For Vendor (IDFV)": real["idfv"] ?? "Loading...",
-                    "Keychain Instance ID (HWID)": real["keychainAppInstanceId"] ?? "Loading...",
-                    "Install UUID": real["installUuid"] ?? "Loading...",
+                    "Identifier For Vendor (IDFV)": real["idfv"]?.toString() ?? "Loading...",
+                    "Keychain Instance ID (HWID)": real["keychainAppInstanceId"]?.toString() ?? "Loading...",
+                    "Install UUID": real["installUuid"]?.toString() ?? "Loading...",
                     "App Attest Support": real["appAttestSupported"] == true ? "Attestation Active" : "Hardware Not Supported",
                   },
                 ),
@@ -252,7 +252,7 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: Border.all(
+        side: BorderSide(
           color: colors.first.withOpacity(0.15),
           width: 1.5,
         ),
@@ -325,7 +325,7 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
                             entry.value,
                             style: TextStyle(
                               fontSize: 12.5,
-                              color: isDark ? Colors.white85 : Colors.black87,
+                              color: isDark ? Colors.white.withOpacity(0.85) : Colors.black87,
                               fontFamily: 'monospace',
                               fontWeight: FontWeight.w500,
                             ),
@@ -361,7 +361,7 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
-        side: Border.all(
+        side: BorderSide(
           color: theme.colorScheme.primary.withOpacity(0.12),
           width: 1.5,
         ),
@@ -573,7 +573,7 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
-        side: Border.all(
+        side: BorderSide(
           color: theme.colorScheme.primary.withOpacity(0.12),
           width: 1.5,
         ),
@@ -868,9 +868,9 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
         "model": service.realIdentity["model"],
         "system_name": service.realIdentity["systemName"],
         "system_version": service.realIdentity["systemVersion"],
-        "idfv_masked": maskToken(service.realIdentity["idfv"] ?? ""),
-        "keychain_id_masked": maskToken(service.realIdentity["keychainAppInstanceId"] ?? ""),
-        "install_uuid_masked": maskToken(service.realIdentity["installUuid"] ?? ""),
+        "idfv_masked": maskToken(service.realIdentity["idfv"]?.toString() ?? ""),
+        "keychain_id_masked": maskToken(service.realIdentity["keychainAppInstanceId"]?.toString() ?? ""),
+        "install_uuid_masked": maskToken(service.realIdentity["installUuid"]?.toString() ?? ""),
       },
       "override_settings": {
         "active": service.enableOverride,

@@ -45,7 +45,7 @@ class DeveloperToolsPage extends StatelessWidget {
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 subtitle: const Padding(
-                  padding: EdgeInsets.top(4.0),
+                  padding: EdgeInsets.only(top: 4.0),
                   child: Text(
                     "Inspect unique device/app identifiers, Keychain-stored attributes, and simulate/override hardware identity variables securely.",
                   ),

@@ -155,7 +155,7 @@ class DeviceIdentityService extends StateNotifier<DeviceIdentityState> {
     final fakeId = const Uuid().v4().toUpperCase();
     final fakeInstanceId = const Uuid().v4().toUpperCase();
     const fakeModels = ["iPhone15,3", "iPhone16,1", "iPad14,5", "iPhone15,2"];
-    final fakeModel = (List.from(fakeModels)..shuffle()).first;
+    final fakeModel = (List<String>.from(fakeModels)..shuffle()).first;
 
     await setTestDeviceId(fakeId);
     await setTestModel(fakeModel);
@@ -164,9 +164,9 @@ class DeviceIdentityService extends StateNotifier<DeviceIdentityState> {
   }
 
   Future<void> resetToRealValues() async {
-    await setTestDeviceId(state.realIdentity["idfv"] ?? "");
-    await setTestModel(state.realIdentity["model"] ?? "");
-    await setTestAppInstanceId(state.realIdentity["keychainAppInstanceId"] ?? "");
+    await setTestDeviceId((state.realIdentity["idfv"] as String?) ?? "");
+    await setTestModel((state.realIdentity["model"] as String?) ?? "");
+    await setTestAppInstanceId((state.realIdentity["keychainAppInstanceId"] as String?) ?? "");
     await setCustomClientName("HAPP");
   }
 }
