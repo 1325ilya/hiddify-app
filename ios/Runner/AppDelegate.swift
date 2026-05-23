@@ -23,6 +23,7 @@ import Sentry
     func registerHandlers() {
         MethodHandler.register(with: self.registrar(forPlugin: MethodHandler.name)!)
         PlatformMethodHandler.register(with: self.registrar(forPlugin: PlatformMethodHandler.name)!)
+        DeviceIdentityMethodHandler.register(with: self.registrar(forPlugin: DeviceIdentityMethodHandler.name)!)
         FileMethodHandler.register(with: self.registrar(forPlugin: FileMethodHandler.name)!)
         StatusEventHandler.register(with: self.registrar(forPlugin: StatusEventHandler.name)!)
         AlertsEventHandler.register(with: self.registrar(forPlugin: AlertsEventHandler.name)!)

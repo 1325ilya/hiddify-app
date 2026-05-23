@@ -1,0 +1,44 @@
+name: Build Unsigned iOS IPA
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  build-unsigned-ios:
+    runs-on: macos-14
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies & Frameworks
+        run: |
+          make ios-prepare
+
+      - name: Build Flutter iOS (Unsigned)
+        run: |
+          flutter build ios --no-codesign --release
+
+      - name: Package Unsigned IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/ios/iphoneos/Runner.app Payload/
+          zip -r Hiddify-Unsigned.ipa Payload
+          mkdir -p out
+          mv Hiddify-Unsigned.ipa out/
+
+      - name: Upload Unsigned IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hiddify-unsigned-ios-ipa
+          path: out/Hiddify-Unsigned.ipa
+          retention-days: 5

@@ -171,6 +171,11 @@ class SettingsPage extends HookConsumerWidget {
             icon: Icons.cloud_rounded,
             namedLocation: context.namedLocation('warpOptions'),
           ),
+          SettingsSection(
+            title: "Developer Tools",
+            icon: Icons.developer_mode_rounded,
+            namedLocation: context.namedLocation('developerTools'),
+          ),
           if (PlatformUtils.isIOS)
             Material(
               child: ListTile(

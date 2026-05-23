@@ -51,6 +51,12 @@ class DioHttpClient with InfraLogger {
     }
   }
 
+  void addInterceptor(Interceptor interceptor) {
+    for (var mode in ["proxy", "direct", "both"]) {
+      _dio[mode]!.interceptors.add(interceptor);
+    }
+  }
+
   int port = 0;
 
   String userAgent;
