@@ -21,15 +21,21 @@ import Sentry
     }
     
     func registerHandlers() {
-        MethodHandler.register(with: self.registrar(forPlugin: MethodHandler.name)!)
-        PlatformMethodHandler.register(with: self.registrar(forPlugin: PlatformMethodHandler.name)!)
-        FileMethodHandler.register(with: self.registrar(forPlugin: FileMethodHandler.name)!)
-        StatusEventHandler.register(with: self.registrar(forPlugin: StatusEventHandler.name)!)
-        AlertsEventHandler.register(with: self.registrar(forPlugin: AlertsEventHandler.name)!)
-//        LogsEventHandler.register(with: self.registrar(forPlugin: LogsEventHandler.name)!)
-//        GroupsEventHandler.register(with: self.registrar(forPlugin: GroupsEventHandler.name)!)
-//        ActiveGroupsEventHandler.register(with: self.registrar(forPlugin: ActiveGroupsEventHandler.name)!)
-//        StatsEventHandler.register(with: self.registrar(forPlugin: StatsEventHandler.name)!)
+        if let registrar = self.registrar(forPlugin: MethodHandler.name) {
+            MethodHandler.register(with: registrar)
+        }
+        if let registrar = self.registrar(forPlugin: PlatformMethodHandler.name) {
+            PlatformMethodHandler.register(with: registrar)
+        }
+        if let registrar = self.registrar(forPlugin: FileMethodHandler.name) {
+            FileMethodHandler.register(with: registrar)
+        }
+        if let registrar = self.registrar(forPlugin: StatusEventHandler.name) {
+            StatusEventHandler.register(with: registrar)
+        }
+        if let registrar = self.registrar(forPlugin: AlertsEventHandler.name) {
+            AlertsEventHandler.register(with: registrar)
+        }
     }
 }
 
