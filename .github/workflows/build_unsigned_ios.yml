@@ -28,17 +28,29 @@ jobs:
         run: |
           flutter build ios --no-codesign --release
 
-      - name: Package Unsigned IPA
+      - name: Package Unsigned IPAs (Standard and GBox-compatible)
         run: |
+          # 1. Package Standard IPA (with PlugIns/VPNExtension.appex)
           mkdir -p Payload
           cp -r build/ios/iphoneos/Runner.app Payload/
           zip -r Hiddify-Unsigned.ipa Payload
+          
+          # 2. Package GBox-compatible IPA (with PlugIns folder stripped to prevent signature mismatch crashes)
+          mkdir -p Payload-GBox
+          cp -r build/ios/iphoneos/Runner.app Payload-GBox/
+          rm -rf Payload-GBox/Runner.app/PlugIns
+          mv Payload Payload-Standard
+          mv Payload-GBox Payload
+          zip -r Hiddify-GBox.ipa Payload
+          
+          # 3. Organize outputs
           mkdir -p out
           mv Hiddify-Unsigned.ipa out/
+          mv Hiddify-GBox.ipa out/
 
-      - name: Upload Unsigned IPA Artifact
+      - name: Upload Unsigned IPA Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: hiddify-unsigned-ios-ipa
-          path: out/Hiddify-Unsigned.ipa
+          path: out/
           retention-days: 5
