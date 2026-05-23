@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../data/device_identity_service.dart';
-import '../data/request_diagnostics_store.dart';
+import 'package:hiddify/features/settings/data/device_identity_service.dart';
+import 'package:hiddify/features/settings/data/request_diagnostics_store.dart';
 import 'package:share_plus/share_plus.dart';
 
 class DeviceIdentityLabPage extends HookConsumerWidget {
@@ -726,7 +726,7 @@ class DeviceIdentityLabPage extends HookConsumerWidget {
         ],
       ),
       subtitle: Padding(
-        padding: const EdgeInsets.top(4),
+        padding: const EdgeInsets.only(top: 4),
         child: Row(
           children: [
             Text(
