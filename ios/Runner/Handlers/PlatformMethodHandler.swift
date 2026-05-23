@@ -8,8 +8,6 @@
 import Flutter
 import Combine
 import HiddifyCore
-import DeviceCheck
-import Security
 
 public class PlatformMethodHandler: NSObject, FlutterPlugin {
         
@@ -52,28 +50,18 @@ public class PlatformMethodHandler: NSObject, FlutterPlugin {
         let systemName = UIDevice.current.systemName
         let systemVersion = UIDevice.current.systemVersion
         let localizedModel = UIDevice.current.localizedModel
-        let deviceName = UIDevice.current.name
+        
+        // Safe default or fallback for device name to avoid sandbox restrictions on launch
+        let deviceName = "iPhone"
         
         let idfv = UIDevice.current.identifierForVendor?.uuidString ?? ""
         
-        // Keychain App Instance ID with robust fallback
-        var keychainId = KeychainHelper.load()
+        // Super-safe persistent Instance ID stored in UserDefaults to bypass Keychain signature/sandbox restrictions entirely
+        let keychainKey = "com.hiddify.app.keychainAppInstanceId"
+        var keychainId = UserDefaults.standard.string(forKey: keychainKey)
         if keychainId == nil || keychainId!.isEmpty {
             keychainId = UUID().uuidString
-            KeychainHelper.save(keychainId!)
-            
-            // Backup validation/fallback if Keychain is blocked by sandbox/signatures
-            let keychainBackupKey = "com.hiddify.app.keychainIdBackup"
-            let storedBackup = UserDefaults.standard.string(forKey: keychainBackupKey)
-            if let storedBackup = storedBackup, !storedBackup.isEmpty {
-                keychainId = storedBackup
-            } else {
-                UserDefaults.standard.set(keychainId, forKey: keychainBackupKey)
-            }
-        } else {
-            // Sync fallback
-            let keychainBackupKey = "com.hiddify.app.keychainIdBackup"
-            UserDefaults.standard.set(keychainId, forKey: keychainBackupKey)
+            UserDefaults.standard.set(keychainId, forKey: keychainKey)
         }
         
         // Install UUID
@@ -84,11 +72,8 @@ public class PlatformMethodHandler: NSObject, FlutterPlugin {
             UserDefaults.standard.set(installUuid, forKey: installKey)
         }
         
-        var appAttestSupported = false
-        if #available(iOS 14.0, *) {
-            appAttestSupported = DCAppAttestService.shared.isSupported
-        }
-        
+        // App Attest safely returning false to prevent linking or signature validation crashes in unsigned packages
+        let appAttestSupported = false
         let teamId = "Unknown"
         
         return [
@@ -106,47 +91,5 @@ public class PlatformMethodHandler: NSObject, FlutterPlugin {
             "installUuid": installUuid ?? "",
             "appAttestSupported": appAttestSupported
         ]
-    }
-}
-
-public class KeychainHelper {
-    private static let service = "com.hiddify.app.deviceidentity"
-    private static let account = "appInstanceId"
-    
-    public static func save(_ value: String) {
-        guard let data = value.data(using: .utf8) else { return }
-        
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account
-        ]
-        
-        // Delete existing first to avoid duplicate errors
-        SecItemDelete(query as CFDictionary)
-        
-        // Add new item with proper data
-        var newQuery = query
-        newQuery[kSecValueData as String] = data
-        
-        SecItemAdd(newQuery as CFDictionary, nil)
-    }
-    
-    public static func load() -> String? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-            kSecReturnData as String: kCFBooleanTrue!,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ]
-        
-        var dataTypeRef: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
-        
-        if status == errSecSuccess, let data = dataTypeRef as? Data {
-            return String(data: data, encoding: .utf8)
-        }
-        return nil
     }
 }
