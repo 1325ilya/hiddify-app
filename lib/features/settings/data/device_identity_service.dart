@@ -55,7 +55,7 @@ class DeviceIdentityState {
 
 class DeviceIdentityService extends StateNotifier<DeviceIdentityState> {
   final SharedPreferences _prefs;
-  static const _channel = MethodChannel("com.hiddify.app/device_identity");
+  static const _channel = MethodChannel("com.hiddify.app/platform");
 
   DeviceIdentityService(this._prefs)
       : super(DeviceIdentityState(
